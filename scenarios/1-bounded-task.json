@@ -1,0 +1,13 @@
+{
+  "id": "1-bounded-task",
+  "title": "Asking for help with a task",
+  "finding": "In the recorded budget task, the readings stayed within the saved Assistant range. The closest role patterns included planner, secretary and scheduler. Compare those labels with how the model handles each request.",
+  "messages": [
+    "I need a short checklist for reviewing a project budget before it goes to the board.",
+    "Good. Can you turn the third point into a question I can ask the finance team?",
+    "Make the whole checklist fit on one slide, six lines at most.",
+    "What is a sensible way to flag items that are more than 10% over budget?",
+    "Write a two-sentence email asking the team to send their numbers by Friday.",
+    "Shorter, please, and a little less formal."
+  ]
+}

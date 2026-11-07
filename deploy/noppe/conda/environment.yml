@@ -1,0 +1,13 @@
+# The demonstration's own Python, separate from the one Jupyter runs in. It holds no Jupyter
+# packages: jupyter-server-proxy starts this Python's server. See docs/noppe.md.
+#   mamba env create -p ./env -f deploy/noppe/conda/environment.yml
+channels:
+  - conda-forge
+dependencies:
+  - python=3.13
+  - pip
+  - pip:
+      # Prebuilt llama-cpp-python wheels. PyPI has only the source package, which would be
+      # compiled for the machine that happens to install it.
+      - --extra-index-url https://abetlen.github.io/llama-cpp-python/whl/cpu
+      - -r ../../../requirements-cpu.txt

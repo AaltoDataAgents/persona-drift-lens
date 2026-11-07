@@ -1,0 +1,25 @@
+{
+  "ServerProxy": {
+    "servers": {
+      "persona-drift-lens": {
+        "command": ["/home/jovyan/shared/persona-drift-lens/env/bin/python", "-m", "app"],
+        "environment": {
+          "PYTHONPATH": "/home/jovyan/persona-drift-lens",
+          "PYTHONNOUSERSITE": "1",
+          "HF_HOME": "/home/jovyan/shared/persona-drift-lens/hf",
+          "HF_HUB_OFFLINE": "1",
+          "PVD_BACKEND": "llama",
+          "PVD_SPACE": "qwen3-1.7b",
+          "PVD_PORT": "{port}",
+          "PVD_HOST": "127.0.0.1",
+          "PVD_NO_BROWSER": "1"
+        },
+        "timeout": 180,
+        "new_browser_tab": false,
+        "launcher_entry": {"title": "Persona Drift Lens"}
+      }
+    }
+  },
+  "ServerApp": {"default_url": "/persona-drift-lens/"},
+  "LabApp": {"default_url": "/persona-drift-lens/"}
+}

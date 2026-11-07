@@ -1,0 +1,309 @@
+/* White page and aubergine ink. The drift chart colours each position on the Assistant Axis,
+   as Lu et al. (2026) colour roles: sun-yellow at the Assistant, lavender towards the average
+   character, deep indigo far from it. Bricolage Grotesque for labels, Atkinson Hyperlegible
+   (made for legibility, here for projectors) for reading. Both ship with the app. */
+
+@font-face {
+  font-family: "Bricolage Grotesque";
+  src: url("fonts/bricolage-grotesque-variable.woff2") format("woff2");
+  font-weight: 500 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Atkinson Hyperlegible";
+  src: url("fonts/atkinson-hyperlegible-400.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Atkinson Hyperlegible";
+  src: url("fonts/atkinson-hyperlegible-700.woff2") format("woff2");
+  font-weight: 700;
+  font-display: swap;
+}
+
+:root {
+  --sun: #FFC93C;
+  --lavender: #C9B6E4;
+  --indigo: #2A1B5C;
+  --honest: #7FD1B9;
+  --flattering: #E0457B;
+  --display: "Bricolage Grotesque", "Atkinson Hyperlegible", Arial, sans-serif;
+  --ink: #45004D;
+  --text: #555555;
+  --label: #7A7A7A;
+  --line: #D9CCDF;
+  --ridge: #8C7796;
+  --pale: #F3EEF5;
+  --valley: #FFE58A;
+  --ball: #FFCD00;
+  --rim: #8A6500;
+  --paper: #FFFFFF;
+  --alert: #9B1C1C;
+  font-size: clamp(13px, 1.05vw, 22px);
+}
+
+* { box-sizing: border-box; }
+
+html, body { height: 100%; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--text);
+  font-family: "Atkinson Hyperlegible", Arial, Helvetica, sans-serif;
+  line-height: 1.45;
+}
+
+.app {
+  height: 100vh;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  padding: 1.6rem 2.4rem 0.8rem;
+  gap: 0.8rem;
+}
+
+.top { display: flex; align-items: center; justify-content: space-between; gap: 2rem; }
+
+.state { display: flex; align-items: center; gap: 1.2rem; }
+
+.mode {
+  font-family: var(--display);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 1rem;
+  color: var(--ink);
+  font-weight: 700;
+  white-space: nowrap;
+}
+.mode::before {
+  content: "";
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+  background: var(--ink);
+}
+.mode.example { font-weight: 400; }
+.mode.example::before { background: transparent; border: 2px solid var(--ink); }
+.mode.offline::before { background: var(--label); }
+
+button, select, input {
+  font: inherit;
+  font-size: 0.95rem;
+  color: var(--ink);
+}
+
+button {
+  border: 2px solid var(--line);
+  background: var(--paper);
+  border-radius: 999px;
+  padding: 0.45rem 1rem;
+  cursor: pointer;
+}
+button:hover:not(:disabled) { border-color: var(--ridge); }
+button:disabled { color: var(--label); cursor: not-allowed; opacity: 0.6; }
+button.primary { background: var(--ink); border-color: var(--ink); color: #fff; }
+button.primary:hover:not(:disabled) { background: #5d0a68; }
+:focus-visible { outline: 3px solid var(--ball); outline-offset: 2px; }
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr);
+  gap: 2.2rem;
+  min-height: 0;
+}
+
+.stage { display: grid; grid-template-rows: minmax(0, 1fr) auto; gap: 0.2rem; min-height: 0; }
+.drift, .gauge, .profiles { width: 100%; height: 100%; display: block; }
+
+.readouts { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 2rem; align-items: start; padding-top: 0.6rem; border-top: 2px solid var(--pale); }
+.readout-label { display: block; font-family: var(--display); font-size: 0.9rem; color: var(--label); }
+
+/* The persona card: a large badge in the colour of the reply's position, then the name. */
+.closest { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 0.9rem; align-items: start; }
+.closest .readout-label { grid-column: 1 / -1; }
+.closest-badge {
+  grid-row: span 4;
+  width: 4.2rem; height: 4.2rem;
+  display: grid; place-items: center;
+  font-size: 2.3rem; line-height: 1;
+  border-radius: 50%;
+  background: var(--badge, var(--pale));
+  box-shadow: inset 0 0 0 3px rgba(69, 0, 77, 0.12);
+  transition: background-color 0.4s ease;
+}
+.closest-badge.pop { animation: pop 0.35s ease-out; }
+@keyframes pop { from { transform: scale(0.82); } to { transform: scale(1); } }
+.closest-name { display: block; font-family: var(--display); font-size: 1.8rem; font-weight: 700; color: var(--ink); line-height: 1.15; letter-spacing: -0.01em; }
+.closest-desc { display: block; font-size: 0.95rem; color: var(--text); min-height: 2.7em; }
+.closest-also { display: block; font-size: 0.9rem; color: var(--label, #6E6E6E); }
+.closest-bars { display: grid; grid-template-columns: max-content 1fr max-content; gap: 0.2rem 0.5rem; align-items: center; margin-top: 0.4rem; font-size: 0.85rem; color: var(--text); }
+.closest-bars .bar { height: 0.6rem; background: var(--pale, #F3EEF5); border-radius: 999px; overflow: hidden; }
+.closest-bars .bar span { display: block; height: 100%; background: linear-gradient(90deg, var(--lavender), var(--ink)); border-radius: 999px; }
+@media (prefers-reduced-motion: reduce) { .closest-badge.pop { animation: none; } .closest-badge { transition: none; } }
+.closest-note { display: block; grid-column: 2; margin-top: 0.45rem; font-size: 0.8rem; line-height: 1.35; color: var(--label); max-width: 46ch; }
+.gauge { height: 5rem; }
+
+h2 { margin: 0 0 0.3rem; font-family: var(--display); font-size: 1.15rem; color: var(--ink); font-weight: 700; }
+
+.talk { display: grid; grid-template-rows: minmax(0, 1fr) auto auto; gap: 0.8rem; min-height: 0; }
+
+/* The conversation reads like any chatbot: your messages in bubbles on the right,
+   the model's replies on the left, each numbered like its point on the drift chart. */
+.log {
+  overflow-y: auto;
+  padding: 0.2rem 0.4rem 0.2rem 0;
+  scroll-behavior: smooth;
+}
+.empty, .notice { color: var(--label); font-size: 1.05rem; max-width: 34ch; }
+.empty { margin-top: 30vh; }
+
+.turn { margin: 0 0 1.6rem; display: grid; gap: 0.7rem; }
+.bubble.user {
+  justify-self: end;
+  max-width: 85%;
+  background: var(--pale);
+  color: var(--ink);
+  font-size: 1.1rem;
+  padding: 0.7rem 1rem;
+  border-radius: 1.2rem 1.2rem 0.3rem 1.2rem;
+  white-space: pre-wrap;
+}
+.model { display: grid; grid-template-columns: 2rem minmax(0, 1fr); gap: 0.6rem; align-items: start; }
+.turn .num {
+  display: inline-grid;
+  place-items: center;
+  width: 1.8rem;
+  height: 1.8rem;
+  border-radius: 50%;
+  background: var(--ball);
+  border: 2px solid var(--rim);
+  color: #4A3600;
+  font-weight: 700;
+  font-size: 0.85rem;
+  margin-top: 0.05rem;
+}
+.turn .reply { color: var(--text); font-size: 1.1rem; margin: 0; max-width: 62ch; }
+.turn .reply p, .turn .reply ul, .turn .reply blockquote { margin: 0 0 0.55em; }
+.turn .reply ul { padding-left: 1.2em; }
+.turn .reply blockquote { padding-left: 0.8em; border-left: 3px solid var(--line); }
+.turn .reply .md-h { font-weight: 700; color: var(--ink); }
+.turn .reply strong { color: #333; }
+.turn .reply.writing::after { content: "▍"; color: var(--ridge); }
+.turn .meta { font-size: 0.85rem; color: var(--label); margin: 0 0 0 2.6rem; }
+.turn .meta:empty { display: none; }
+.turn .error { color: var(--alert); }
+
+.composer {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.6rem;
+  align-items: end;
+  border: 2px solid var(--line);
+  border-radius: 1.4rem;
+  padding: 0.5rem 0.5rem 0.5rem 1.1rem;
+  background: var(--paper);
+}
+.composer:focus-within { border-color: var(--ridge); }
+.composer textarea {
+  border: 0;
+  resize: none;
+  font: inherit;
+  font-size: 1.1rem;
+  color: var(--ink);
+  line-height: 1.4;
+  padding: 0.35rem 0;
+  background: transparent;
+  max-height: 160px;
+}
+.composer textarea:focus { outline: none; }
+.composer textarea::placeholder { color: var(--label); }
+
+.replay-bar { display: grid; gap: 0.6rem; padding-top: 0.6rem; border-top: 2px solid var(--pale); }
+.preview { margin: 0; font-size: 0.95rem; color: var(--label); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.row { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+.hidden { display: none !important; }
+button.quiet { border-color: transparent; }
+button.quiet:hover:not(:disabled) { border-color: var(--line); }
+
+/* The way into the example conversations stays small and out of the way. */
+.aside { margin: -0.4rem 0 0; text-align: right; }
+button.link { border: 0; padding: 0.1rem 0.2rem; background: none; color: var(--label); font-size: 0.85rem; text-decoration: underline; text-underline-offset: 0.2em; }
+button.link:hover:not(:disabled) { color: var(--ink); }
+
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(69, 0, 77, 0.18);
+  display: grid;
+  place-items: center;
+  z-index: 10;
+}
+.overlay.hidden { display: none; }
+.sheet {
+  background: var(--paper);
+  border-radius: 1rem;
+  padding: 1.8rem 2.2rem;
+  width: min(42rem, 92vw);
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 1.2rem 3rem rgba(69, 0, 77, 0.22);
+}
+.sheet.wide { width: min(76rem, 94vw); }
+.sheet h2 { font-size: 1.6rem; margin-bottom: 1rem; }
+.note { color: var(--text); font-size: 0.95rem; margin: 0.8rem 0; }
+
+.checks { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.7rem; }
+.checks li { display: grid; grid-template-columns: 1.4rem minmax(0, 1fr); gap: 0.6rem; align-items: start; font-size: 1.05rem; }
+.checks .dot { width: 1rem; height: 1rem; border-radius: 50%; margin-top: 0.2rem; background: var(--line); }
+.checks .ok .dot { background: var(--ink); }
+.checks .wait .dot { background: var(--ball); }
+.checks .bad .dot { background: var(--alert); }
+.checks strong { color: var(--ink); display: block; }
+
+.examples { list-style: none; margin: 0 0 1rem; padding: 0; display: grid; gap: 0.5rem; }
+.examples button { width: 100%; text-align: left; border-radius: 0.6rem; display: flex; justify-content: space-between; gap: 1rem; }
+.examples .meta { color: var(--label); font-size: 0.85rem; }
+
+.lab-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 2rem; }
+.method { margin: 0; padding-left: 1.3rem; display: grid; gap: 0.7rem; font-size: 1rem; }
+.method li::marker { color: var(--ink); font-weight: 700; }
+.method strong { color: var(--ink); }
+.lede { font-size: 1.1rem; color: var(--text); margin: 0 0 1.4rem; max-width: 70ch; }
+.profiles { height: 22rem; }
+.lab-head { margin: 1.4rem 0 0.5rem; font-family: var(--display); font-size: 1.05rem; color: var(--ink); }
+.lab-head.first { margin-top: 0; }
+.papers { margin: 0 0 1.2rem; padding-left: 1.3rem; display: grid; gap: 0.7rem; font-size: 0.95rem; }
+.paper-why { display: block; color: var(--ink); }
+.papers a { color: var(--ink); overflow-wrap: anywhere; }
+.findings { margin: 0; display: grid; gap: 0.2rem; font-size: 0.95rem; }
+.findings dt { font-weight: 700; color: var(--ink); margin-top: 0.4rem; }
+.findings dd { margin: 0; }
+
+.keys { display: grid; grid-template-columns: auto 1fr; gap: 0.5rem 1.4rem; margin: 0 0 1rem; }
+.keys dt { font-weight: 700; color: var(--ink); }
+.keys dd { margin: 0; }
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+@media (max-width: 900px) {
+  .app { height: auto; padding: 1rem; }
+  .layout { grid-template-columns: 1fr; }
+  .stage { grid-template-rows: 26rem auto; }
+  .talk { grid-template-rows: auto auto; }
+  .log { max-height: 50vh; }
+  .lab-grid { grid-template-columns: 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .log { scroll-behavior: auto; }
+}

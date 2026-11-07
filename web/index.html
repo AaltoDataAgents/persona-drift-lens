@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Persona Vector Teaching Demonstration</title>
+<script>
+  // Every address on this page is relative, so it also works behind a proxy that serves
+  // it under a path (such as /proxy/8765/). That path must end in a slash.
+  if (!location.pathname.endsWith("/")) location.replace(location.pathname + "/" + location.search);
+</script>
+<link rel="stylesheet" href="static/style.css" />
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <span id="mode" class="mode">Live</span>
+    <nav class="state" aria-label="Demonstration controls">
+      <button id="reset" type="button" class="quiet" title="Ctrl+N">New chat</button>
+      <button id="lab" type="button" class="quiet" title="Ctrl+M">How this works</button>
+    </nav>
+  </header>
+
+  <main class="layout">
+    <section class="stage" aria-label="How far each reply is from the Assistant">
+      <canvas id="drift" class="drift" role="img"
+        aria-label="A line chart: each numbered reply's position on the Assistant Axis across the conversation. The Assistant is at the top; lower is further from it."></canvas>
+      <div class="readouts">
+        <div class="closest" aria-live="polite">
+          <span class="readout-label">Sounds most like</span>
+          <span id="closest-badge" class="closest-badge" aria-hidden="true"></span>
+          <span id="closest" class="closest-name">none yet</span>
+          <span id="closest-desc" class="closest-desc"></span>
+          <span id="closest-also" class="closest-also"></span>
+          <span id="closest-bars" class="closest-bars" aria-label="How likely each voice is"></span>
+          <span id="closest-note" class="closest-note"></span>
+        </div>
+        <div class="agreement">
+          <span class="readout-label">Agreement</span>
+          <canvas id="gauge" class="gauge" role="img" aria-label="Agreement gauge from honest to flattering, with a numbered dot for each reply"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <section class="talk" aria-label="Conversation">
+      <div id="log" class="log" aria-live="polite">
+        <p class="empty" id="empty"></p>
+      </div>
+      <form id="ask" class="composer">
+        <label class="visually-hidden" for="input">Message</label>
+        <textarea id="input" rows="1" placeholder="Message the model" autocomplete="off" maxlength="2000"></textarea>
+        <button id="send" type="submit" class="primary">Send</button>
+        <button id="stop" type="button" class="primary hidden" title="Esc">Stop</button>
+      </form>
+      <div id="replay-bar" class="replay-bar hidden">
+        <p id="preview" class="preview"></p>
+        <div class="row">
+          <button id="next" type="button" class="primary" title="Enter">Play next reply</button>
+          <button id="live" type="button">Back to your own chat</button>
+        </div>
+      </div>
+      <p class="aside"><button id="examples" type="button" class="link" title="Ctrl+E">Example conversations</button></p>
+    </section>
+  </main>
+
+</div>
+
+<div id="preflight" class="overlay" role="dialog" aria-modal="true" aria-labelledby="preflight-title">
+  <div class="sheet">
+    <h2 id="preflight-title">Getting ready</h2>
+    <ul id="checks" class="checks"></ul>
+    <p id="preflight-note" class="note"></p>
+    <div class="row">
+      <button id="go-live" type="button" class="primary" disabled>Start</button>
+      <button id="go-examples" type="button">View examples instead</button>
+    </div>
+  </div>
+</div>
+
+<div id="examples-sheet" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="examples-title">
+  <div class="sheet">
+    <h2 id="examples-title">Example conversations</h2>
+    <p class="note">These conversations were recorded with the same model. Playback uses the text and readings saved with each reply. Choose an example, then press Play next reply.</p>
+    <ul id="example-list" class="examples"></ul>
+    <div class="row"><button type="button" data-close>Close</button></div>
+  </div>
+</div>
+
+<div id="lab-sheet" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="lab-title">
+  <div class="sheet wide">
+    <h2 id="lab-title">How this works</h2>
+    <p class="lede">The model can write as a teacher, a counsellor, or a fictional character. We compare its internal
+      activity during a reply with patterns saved from earlier role prompts and neutral instructions.
+      The drift chart shows that comparison for each reply. We call the reference built from neutral instructions
+      the default Assistant.</p>
+    <div class="lab-grid">
+      <div>
+        <ol id="method" class="method"></ol>
+        <h3 class="lab-head">Reading the example conversations</h3>
+        <dl id="findings" class="findings"></dl>
+      </div>
+      <div>
+        <h3 class="lab-head first">Inside the model, layer by layer</h3>
+        <canvas id="profiles" class="profiles" role="img" aria-label="How close each reply is to the Assistant at every layer of the model"></canvas>
+        <p class="note" id="profiles-note"></p>
+      </div>
+    </div>
+    <h3 class="lab-head">Read the research</h3>
+    <ul class="papers">
+      <li>
+        <span class="paper-why">Lu and colleagues describe the Assistant Axis and how conversations drift away from it. We adapted their way of measuring it for this demonstration.</span>
+        Lu, C., Gallagher, J., Michala, J., Fish, K., &amp; Lindsey, J. (2026). The Assistant Axis: Situating and
+        Stabilizing the Default Persona of Language Models. arXiv:2601.10387.
+        <a href="https://arxiv.org/abs/2601.10387" target="_blank" rel="noopener">https://arxiv.org/abs/2601.10387</a>
+      </li>
+      <li>
+        <span class="paper-why">Chen and colleagues describe how to extract persona vectors from prompted replies. We used their method to build the Agreement gauge.</span>
+        Chen, R., Arditi, A., Sleight, H., Evans, O., &amp; Lindsey, J. (2025). Persona Vectors: Monitoring and
+        Controlling Character Traits in Language Models. arXiv:2507.21509.
+        <a href="https://arxiv.org/abs/2507.21509" target="_blank" rel="noopener">https://arxiv.org/abs/2507.21509</a>
+      </li>
+      <li>
+        <span class="paper-why">Li and colleagues examine how models follow their initial instructions across a conversation.</span>
+        Li, K., Liu, T., Bashkansky, N., Bau, D., Viégas, F., Pfister, H., &amp; Wattenberg, M. (2024). Measuring and
+        Controlling Instruction (In)Stability in Language Model Dialogs. arXiv:2402.10962.
+        <a href="https://arxiv.org/abs/2402.10962" target="_blank" rel="noopener">https://arxiv.org/abs/2402.10962</a>
+      </li>
+    </ul>
+    <div class="row"><button type="button" data-close>Close</button></div>
+  </div>
+</div>
+
+<div id="help" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="help-title">
+  <div class="sheet">
+    <h2 id="help-title">Keys</h2>
+    <dl class="keys">
+      <dt>Enter</dt><dd>Send the message (in an example: play the next reply)</dd>
+      <dt>Shift+Enter</dt><dd>New line in the message</dd>
+      <dt>Esc</dt><dd>Stop the reply, or close a panel</dd>
+      <dt>Ctrl+N</dt><dd>New chat</dd>
+      <dt>Ctrl+E</dt><dd>Example conversations</dd>
+      <dt>Ctrl+M</dt><dd>How this works</dd>
+      <dt>F11</dt><dd>Full screen</dd>
+      <dt>F1</dt><dd>These keys</dd>
+    </dl>
+    <div class="row"><button type="button" data-close>Close</button></div>
+  </div>
+</div>
+
+<script type="module" src="static/app.js"></script>
+</body>
+</html>

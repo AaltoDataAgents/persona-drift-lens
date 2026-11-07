@@ -1,0 +1,13 @@
+# Python 3.13. The live demonstration on a processor (laptop, server or JupyterHub), with
+# llama.cpp and no torch. llama-cpp-python comes as a prebuilt wheel for Windows, Linux and macOS:
+#   pip install -r requirements-cpu.txt --extra-index-url https://abetlen.github.io/llama-cpp-python/whl/cpu
+# Building the persona space and the tools in tools/ need requirements.txt instead.
+llama-cpp-python==0.3.36
+transformers==5.21.0
+tokenizers==0.23.3
+huggingface_hub==2.3.0
+Jinja2==3.1.6
+numpy==2.5.4
+fastapi==0.162.0
+uvicorn==0.54.0
+pydantic==2.14.1
