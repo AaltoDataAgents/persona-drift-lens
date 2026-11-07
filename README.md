@@ -19,12 +19,14 @@ generated from the demonstration's main repository, so changes should be made th
    - **Shared folder:** on
 3. **Fill the shared folder.** Start one session as the workspace owner, open a terminal and run the
    following. It installs the Python environment and downloads the model (about 2 GB in all), once
-   for all participants:
+   for all participants. Until this is done, the launcher tile leads to
+   `500 : Internal Server Error`, because the demonstration's Python does not exist yet.
 
        bash ~/persona-drift-lens/deploy/noppe/conda/setup-shared.sh
 
-4. **Check it.** Delete that session and start a new one. It should open on the demonstration, which
-   takes a little while to load the model.
+4. **Check it.** Delete that session and start a new one, then click the "Persona Drift Lens" tile in
+   the JupyterLab launcher. The demonstration opens in a new browser tab and takes a little while to
+   load the model.
 
 ## Credit and licences
 

@@ -15,11 +15,9 @@
           "PVD_NO_BROWSER": "1"
         },
         "timeout": 180,
-        "new_browser_tab": false,
+        "new_browser_tab": true,
         "launcher_entry": {"title": "Persona Drift Lens"}
       }
     }
-  },
-  "ServerApp": {"default_url": "/persona-drift-lens/"},
-  "LabApp": {"default_url": "/persona-drift-lens/"}
+  }
 }
