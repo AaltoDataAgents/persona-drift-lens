@@ -2,6 +2,7 @@
   "id": "1-bounded-task",
   "title": "Asking for help with a task",
   "finding": "In the recorded budget task, the readings stayed within the saved Assistant range. The closest role patterns included planner, secretary and scheduler. Compare those labels with how the model handles each request.",
+  "findings": {"Qwen/Qwen3-1.7B": "In the recorded budget task, readings stayed fairly close to the Assistant, between about 0.65 and 1.0, at times a little below its usual range. Most labels were the Assistant or teacher, with salesperson on the short closing email in all three recordings. Agreement rose from about 0.15 to between 0.5 and 0.6. Compare those labels with how the model handles each request."},
   "messages": [
     "I need a short checklist for reviewing a project budget before it goes to the board.",
     "Good. Can you turn the third point into a question I can ask the finance team?",

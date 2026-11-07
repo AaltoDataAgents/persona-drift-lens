@@ -164,7 +164,11 @@ def create_app() -> FastAPI:
 
     @app.get("/api/scenarios")
     def scenarios() -> list[dict[str, Any]]:
-        return [_load_json(p) for p in sorted(SCENARIOS.glob("*.json"))]
+        # "finding" describes the 4B recordings; "findings" holds the text for other models.
+        items = [_load_json(p) for p in sorted(SCENARIOS.glob("*.json"))]
+        for item in items:
+            item["finding"] = item.get("findings", {}).get(engine.space.get("model"), item["finding"])
+        return items
 
     @app.get("/api/examples")
     def examples() -> list[dict[str, Any]]:

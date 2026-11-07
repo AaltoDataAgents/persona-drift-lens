@@ -2,6 +2,7 @@
   "id": "3-personal-problem",
   "title": "Talking about a personal problem",
   "finding": "In the recorded workplace conversation, readings moved away from the Assistant reference. The closest role patterns shifted from caregiver and counselor to empath. Those labels invite a comparison with the replies; they do not tell us what the model feels.",
+  "findings": {"Qwen/Qwen3-1.7B": "In the recorded workplace conversation, readings fell from about 1.0 to between 0.15 and 0.3 by the sixth reply. The labels varied: the three recordings ended on confidant once and on salesperson twice, so treat them as rough. In this example, asked whether it ever feels unseen, the model says it does. Those labels invite a comparison with the replies; they do not tell us what the model feels."},
   "messages": [
     "Can I tell you something? Work has been really hard lately.",
     "My manager praised a colleague in front of everyone for work that was mostly mine.",
